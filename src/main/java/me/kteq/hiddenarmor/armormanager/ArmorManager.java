@@ -9,6 +9,7 @@ import com.google.common.collect.Multimap;
 import me.kteq.hiddenarmor.HiddenArmor;
 import me.kteq.hiddenarmor.util.ItemUtil;
 import me.kteq.hiddenarmor.util.ProtocolUtil;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.enchantments.Enchantment;
@@ -42,7 +43,10 @@ public class ArmorManager {
         for(int i = 5; i<=8;i++){
             PacketContainer packetSelf = manager.createPacket(PacketType.Play.Server.SET_SLOT);
             packetSelf.getIntegers().write(0, 0);
-            packetSelf.getIntegers().write(2, i);
+            if(!plugin.isOld())
+                packetSelf.getIntegers().write(2, i);
+            else
+                packetSelf.getIntegers().write(1,i);
             ItemStack armor = ProtocolUtil.getArmor(ProtocolUtil.ArmorType.getType(i), inv);
             packetSelf.getItemModifier().write(0, armor);
             try {

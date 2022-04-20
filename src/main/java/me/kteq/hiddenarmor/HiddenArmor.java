@@ -13,12 +13,14 @@ import me.kteq.hiddenarmor.packet.ArmorOthersPacketListener;
 import me.kteq.hiddenarmor.packet.ArmorSelfPacketListener;
 import me.kteq.hiddenarmor.armormanager.ArmorManager;
 import me.kteq.hiddenarmor.util.StrUtil;
+import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.potion.PotionEffectType;
 
 import java.io.File;
 import java.io.IOException;
@@ -32,6 +34,7 @@ public final class HiddenArmor extends JavaPlugin {
     private FileConfiguration enabledPlayers;
 
     private String prefix;
+    private boolean isOld;
 
     private boolean ignoreLeatherArmor;
     private boolean ignoreTurtleHelmet;
@@ -46,10 +49,11 @@ public final class HiddenArmor extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        // Default config files
+        // Default config file
         this.saveDefaultConfig();
         checkConfig();
         this.saveDefaultEnabledPlayers();
+        isOld = Bukkit.getBukkitVersion().startsWith("1.16");
 
         // Define variables
         ignoredPlayers = new ArrayList<>();
@@ -183,5 +187,9 @@ public final class HiddenArmor extends JavaPlugin {
 
     public boolean isIgnoreElytra() {
         return ignoreElytra;
+    }
+
+    public boolean isOld() {
+        return isOld;
     }
 }

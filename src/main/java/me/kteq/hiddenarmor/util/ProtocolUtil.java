@@ -16,7 +16,7 @@ public class ProtocolUtil {
 
     public static void broadcastPlayerPacket(ProtocolManager manager, PacketContainer packet, Player player){
         for(Player p : Bukkit.getOnlinePlayers()){
-            if(!(p.getWorld().equals(player.getWorld()) && p.getLocation().distance(player.getLocation()) < Bukkit.getSimulationDistance()*16 && !p.equals(player))) continue;
+            if(!(p.getWorld().equals(player.getWorld()) && p.getLocation().distance(player.getLocation()) < Bukkit.getViewDistance()*16 && !p.equals(player))) continue;
             try {
                 manager.sendServerPacket(p, packet);
             } catch (InvocationTargetException e) {

@@ -29,8 +29,9 @@ public class ArmorSelfPacketListener {
                 Player player = event.getPlayer();
                 if(pl.shouldNotHide(player)) return;
 
+
                 //SET_SLOT
-                if(packet.getType().equals(PacketType.Play.Server.SET_SLOT) && packet.getIntegers().read(0).equals(0) && packet.getIntegers().read(2) > 4 && packet.getIntegers().read(2) < 9){
+                if(packet.getType().equals(PacketType.Play.Server.SET_SLOT) && packet.getIntegers().read(0).equals(0) && packet.getIntegers().read(pl.isOld() ? 1 : 2) > 4 && packet.getIntegers().read(pl.isOld() ? 1 : 2) < 9){
                     ItemStack itemStack = packet.getItemModifier().read(0);
                     if(itemStack!=null) packet.getItemModifier().write(0, armorManager.hideArmor(itemStack));
                 }
