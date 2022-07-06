@@ -28,11 +28,13 @@ public class InventoryShiftClickListener implements Listener {
         if(!(event.getClickedInventory() instanceof PlayerInventory)) return;
         if(!event.isShiftClick()) return;
 
-
         Player player = (Player) event.getWhoClicked();
         PlayerInventory inv = player.getInventory();
         ItemStack armor = event.getCurrentItem();
 
+        if(player == null) return;
+        if(inv == null) return;
+        if(armor == null) return;
 
         if((armor.getType().toString().endsWith("_HELMET") && inv.getHelmet()==null) ||
                 ((armor.getType().toString().endsWith("_CHESTPLATE") || armor.getType().equals(Material.ELYTRA)) && inv.getChestplate()==null) ||
