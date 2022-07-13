@@ -51,8 +51,10 @@ public class ArmorOthersPacketListener {
     }
 
     private boolean ignore(ItemStack is){
-        return (pl.isIgnoreLeatherArmor() && is.getType().toString().startsWith("LEATHER")) ||
-                (pl.isIgnoreTurtleHelmet() && is.getType().equals(Material.TURTLE_HELMET)) &&
-                        ItemUtil.isArmor(is);
+        if ((pl.isIgnoreLeatherArmor() && is.getType().toString().startsWith("LEATHER")) ||
+            (pl.isIgnoreTurtleHelmet() && is.getType().equals(Material.TURTLE_HELMET)) ||
+            !ItemUtil.isArmor(is))
+            return true;
+        return false;
     }
 }
