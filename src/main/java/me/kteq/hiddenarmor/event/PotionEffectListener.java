@@ -24,6 +24,7 @@ public class PotionEffectListener implements Listener {
         if(!(event.getEntity() instanceof Player)) return;
 
         Player player = (Player) event.getEntity();
+        if(!plugin.hasPlayer(player)) return;
 
         new BukkitRunnable(){
             @Override
