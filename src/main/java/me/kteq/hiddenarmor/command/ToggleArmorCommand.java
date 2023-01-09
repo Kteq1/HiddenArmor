@@ -8,6 +8,7 @@ import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
 public class ToggleArmorCommand {
@@ -17,7 +18,7 @@ public class ToggleArmorCommand {
     public ToggleArmorCommand(HiddenArmor pl, ArmorManager am){
         armorManager = am;
         plugin = pl;
-        new CommandUtil(plugin,"togglearmor", 0,1, true, plugin.isToggleDefault()){
+        new CommandUtil(plugin,"togglearmor", 0,1, false, plugin.isToggleDefault()){
 
             @Override
             public void sendUsage(CommandSender sender) {
@@ -30,17 +31,22 @@ public class ToggleArmorCommand {
             @Override
             public boolean onCommand(CommandSender sender, String[] arguments){
                 Player player;
-                if(arguments.length==1){
+                if(arguments.length == 1) {
                     if(!canUseArg(sender, "other") && !plugin.isToggleOtherDefault()) return false;
                     String playerName = arguments[0];
                     player = Bukkit.getPlayer(playerName);
 
-                    if(player==null){
+                    if(player == null){
                         sender.sendMessage(plugin.getPrefix() + "Player not found.");
                         return true;
                     }
                 }else {
-                    player = (Player) sender;
+                    if (sender instanceof ConsoleCommandSender) {
+                        sender.sendMessage(plugin.getPrefix() + "To use this command in console, you must specify the player name: /togglearmor <player>");
+                        return true;
+                    } else {
+                        player = (Player) sender;
+                    }
                 }
 
                 String visibility;
@@ -53,7 +59,7 @@ public class ToggleArmorCommand {
                     visibility =  StrUtil.color("&7OFF") ;
                 }
 
-                if(!player.equals((Player) sender)) sender.sendMessage(player.getName() + "'s armor visibility': " + visibility);
+                if(!player.equals(sender)) sender.sendMessage(player.getName() + "'s armor visibility: " + visibility);
 
                 player.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent("Armor visibility: " + visibility));
 

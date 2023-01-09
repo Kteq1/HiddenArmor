@@ -20,9 +20,9 @@ import org.bukkit.inventory.ItemStack;
 import java.util.List;
 
 public class ArmorOthersPacketListener {
-    private HiddenArmor pl;
+    private final HiddenArmor pl;
 
-    public ArmorOthersPacketListener(HiddenArmor pl, ProtocolManager manager){
+    public ArmorOthersPacketListener(HiddenArmor pl, ProtocolManager manager) {
         this.pl = pl;
         manager.addPacketListener(new PacketAdapter(pl, PacketType.Play.Server.ENTITY_EQUIPMENT) {
             @Override
@@ -38,24 +38,22 @@ public class ArmorOthersPacketListener {
 
                 List<Pair<EnumWrappers.ItemSlot, ItemStack>> pairList = packet.getSlotStackPairLists().read(0);
 
-                pairList.stream().filter(ProtocolUtil::isArmorSlot).forEach(e -> {
-                    if(e.getSecond().getType().equals(Material.ELYTRA) && ((hidPlayer.isGliding() || pl.isIgnoreElytra()) && !hidPlayer.isInvisible())){
-                        e.setSecond(new ItemStack(Material.ELYTRA));
+                pairList.stream().filter(ProtocolUtil::isArmorSlot).forEach(slotPair -> {
+                    if(slotPair.getSecond().getType().equals(Material.ELYTRA) && ((hidPlayer.isGliding() || pl.isIgnoreElytra()) && !hidPlayer.isInvisible())){
+                        slotPair.setSecond(new ItemStack(Material.ELYTRA));
                     }
-                    else if(!ignore(e.getSecond()))
-                        e.setSecond(new ItemStack(Material.AIR));
+                    else if(!ignore(slotPair.getSecond()))
+                        slotPair.setSecond(new ItemStack(Material.AIR));
                 });
                 packet.getSlotStackPairLists().write(0, pairList);
             }
         });
     }
 
-    private boolean ignore(ItemStack is){
-        if ((pl.isIgnoreLeatherArmor() && is.getType().toString().startsWith("LEATHER")) ||
-            (pl.isIgnoreTurtleHelmet() && is.getType().equals(Material.TURTLE_HELMET)) ||
-            (!ItemUtil.isArmor(is) &&
-            (is.getType().equals(Material.ELYTRA) && pl.isIgnoreElytra())))
-            return true;
-        return false;
+    private boolean ignore(ItemStack itemStack) {
+        return (pl.isIgnoreLeatherArmor() && itemStack.getType().toString().startsWith("LEATHER")) ||
+                (pl.isIgnoreTurtleHelmet() && itemStack.getType().equals(Material.TURTLE_HELMET)) ||
+                (!ItemUtil.isArmor(itemStack) && !itemStack.getType().equals(Material.ELYTRA)) ||
+                (itemStack.getType().equals(Material.ELYTRA) && pl.isIgnoreElytra());
     }
 }

@@ -25,8 +25,8 @@ import java.util.Map;
 
 
 public class ArmorManager {
-    private HiddenArmor plugin;
-    private ProtocolManager manager;
+    private final HiddenArmor plugin;
+    private final ProtocolManager manager;
 
     public ArmorManager(HiddenArmor pl , ProtocolManager pm){
         this.plugin = pl;
@@ -66,6 +66,8 @@ public class ArmorManager {
         pairList.add(new Pair<>(EnumWrappers.ItemSlot.CHEST, ProtocolUtil.getArmor(ProtocolUtil.ArmorType.CHEST, inv)));
         pairList.add(new Pair<>(EnumWrappers.ItemSlot.LEGS, ProtocolUtil.getArmor(ProtocolUtil.ArmorType.LEGGS, inv)));
         pairList.add(new Pair<>(EnumWrappers.ItemSlot.FEET, ProtocolUtil.getArmor(ProtocolUtil.ArmorType.BOOTS, inv)));
+        pairList.add(new Pair<>(EnumWrappers.ItemSlot.MAINHAND, player.getInventory().getItemInMainHand().clone()));
+        pairList.add(new Pair<>(EnumWrappers.ItemSlot.OFFHAND, player.getInventory().getItemInOffHand().clone()));
         packetOthers.getSlotStackPairLists().write(0, pairList);
         ProtocolUtil.broadcastPlayerPacket(manager, packetOthers, player);
     }

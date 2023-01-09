@@ -5,10 +5,10 @@ import com.comphenix.protocol.ProtocolManager;
 import me.kteq.hiddenarmor.util.Metrics;
 import me.kteq.hiddenarmor.command.HiddenArmorCommand;
 import me.kteq.hiddenarmor.command.ToggleArmorCommand;
-import me.kteq.hiddenarmor.event.EntityToggleGlideListener;
-import me.kteq.hiddenarmor.event.GameModeListener;
-import me.kteq.hiddenarmor.event.PotionEffectListener;
-import me.kteq.hiddenarmor.event.InventoryShiftClickListener;
+import me.kteq.hiddenarmor.listener.EntityToggleGlideListener;
+import me.kteq.hiddenarmor.listener.GameModeListener;
+import me.kteq.hiddenarmor.listener.PotionEffectListener;
+import me.kteq.hiddenarmor.listener.InventoryShiftClickListener;
 import me.kteq.hiddenarmor.packet.ArmorOthersPacketListener;
 import me.kteq.hiddenarmor.packet.ArmorSelfPacketListener;
 import me.kteq.hiddenarmor.armormanager.ArmorManager;
@@ -20,7 +20,6 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.potion.PotionEffectType;
 
 import java.io.File;
 import java.io.IOException;
@@ -98,14 +97,14 @@ public final class HiddenArmor extends JavaPlugin {
     }
 
 
-    public void loadConfigVars(){
+    public void loadConfigVars() {
         ignoreLeatherArmor = this.getConfig().getBoolean("ignore.leather-armor");
         ignoreTurtleHelmet = this.getConfig().getBoolean("ignore.turtle-helmet");
         ignoreElytra = this.getConfig().getBoolean("ignore.elytra");
         hideInvisible = this.getConfig().getBoolean("invisibility-potion.always-hide-gear");
     }
 
-    public void reload(){
+    public void reload() {
         reloadConfig();
         loadConfigVars();
     }
@@ -125,7 +124,7 @@ public final class HiddenArmor extends JavaPlugin {
         }
     }
 
-    private void checkConfig(){
+    private void checkConfig() {
         if(getConfig().getInt("config-version") >= getConfig().getDefaults().getInt("config-version")) return;
         getLogger().log(Level.WARNING, "Your HiddenArmor configuration file is outdated!");
         getLogger().log(Level.WARNING, "Please regenerate the 'config.yml' file when possible.");
@@ -133,7 +132,7 @@ public final class HiddenArmor extends JavaPlugin {
 
 
 
-    public boolean shouldNotHide(Player player){
+    public boolean shouldNotHide(Player player) {
         return (!hasPlayer(player) && !player.isInvisible() && hideInvisible) ||
                 (!hasPlayer(player) && !hideInvisible) ||
                 (hasPlayer(player) && player.isInvisible() && !hideInvisible) ||
@@ -145,23 +144,23 @@ public final class HiddenArmor extends JavaPlugin {
         return prefix;
     }
 
-    public void addHiddenPlayer(Player player){
+    public void addHiddenPlayer(Player player) {
         hiddenPlayers.add(player.getUniqueId().toString());
     }
 
-    public void removeHiddenPlayer(Player player){
+    public void removeHiddenPlayer(Player player) {
         hiddenPlayers.remove(player.getUniqueId().toString());
     }
 
-    public boolean hasPlayer(Player player){
+    public boolean hasPlayer(Player player) {
         return hiddenPlayers.contains(player.getUniqueId().toString());
     }
 
-    public void addIgnoredPlayer(Player player){
+    public void addIgnoredPlayer(Player player) {
         ignoredPlayers.add(player.getUniqueId());
     }
 
-    public void removeIgnoredPlayer(Player player){
+    public void removeIgnoredPlayer(Player player) {
         ignoredPlayers.remove(player.getUniqueId());
     }
 

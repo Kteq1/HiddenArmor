@@ -16,11 +16,14 @@ public class HiddenArmorCommand {
         new CommandUtil(plugin, "hiddenarmor", 0, 1, false, true){
             @Override
             public boolean onCommand(CommandSender sender, String[] arguments) throws IOException {
-                if((arguments.length == 0) || (arguments[0].equalsIgnoreCase("help"))){
+                if((arguments.length < 1) || (arguments[0].equals("help"))){
                     help(sender);
                     return true;
                 }
 
+                switch (arguments[0]) {
+
+                }
                 if(arguments[0].equalsIgnoreCase("reload") && canUseArg(sender, "reload")){
                     plugin.reload();
                     sender.sendMessage(plugin.getPrefix() + "Configuration reloaded!");

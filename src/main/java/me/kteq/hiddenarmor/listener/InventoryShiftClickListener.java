@@ -1,4 +1,4 @@
-package me.kteq.hiddenarmor.event;
+package me.kteq.hiddenarmor.listener;
 
 import me.kteq.hiddenarmor.HiddenArmor;
 import me.kteq.hiddenarmor.armormanager.ArmorManager;

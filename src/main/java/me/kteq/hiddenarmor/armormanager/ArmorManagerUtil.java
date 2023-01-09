@@ -21,10 +21,10 @@ public class ArmorManagerUtil {
     public static String getArmorName(ItemStack itemStack){
         Material item = itemStack.getType();
         if(!item.toString().contains("_")) return null;
-        String splitName[] = item.toString().split("_");
+        String[] splitName = item.toString().split("_");
         String mat = splitName[0].substring(1).toLowerCase();
         String type = splitName[1].substring(1).toLowerCase();
-        String name = splitName[0].substring(0,1)+mat+" "+splitName[1].substring(0,1)+type;
+        String name = splitName[0].charAt(0)+mat+" "+splitName[1].charAt(0)+type;
         if(itemStack.getItemMeta().hasDisplayName())
             name = itemStack.getItemMeta().getDisplayName()+ StrUtil.color(" &r&8(")+name+")";
         else

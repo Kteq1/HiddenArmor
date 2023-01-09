@@ -7,13 +7,10 @@ public class ItemUtil {
     public static boolean isArmor(ItemStack itemStack) {
         if (itemStack == null) return false;
         String type = itemStack.getType().name();
-        if (type.endsWith("_HELMET")
+        return type.endsWith("_HELMET")
                 || type.endsWith("_CHESTPLATE")
                 || type.endsWith("_LEGGINGS")
-                || type.endsWith("_BOOTS")) {
-            return true;
-        }
-        return false;
+                || type.endsWith("_BOOTS");
     }
 
     public static int getDurabilityPercentage(ItemStack itemStack){

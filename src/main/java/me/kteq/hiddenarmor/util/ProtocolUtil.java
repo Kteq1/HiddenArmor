@@ -26,19 +26,16 @@ public class ProtocolUtil {
     }
 
     public static boolean isArmorSlot(Pair<EnumWrappers.ItemSlot, ItemStack> pair){
-        if(pair.getFirst().equals(EnumWrappers.ItemSlot.FEET) ||
+        return pair.getFirst().equals(EnumWrappers.ItemSlot.FEET) ||
                 pair.getFirst().equals(EnumWrappers.ItemSlot.LEGS) ||
                 pair.getFirst().equals(EnumWrappers.ItemSlot.CHEST) ||
-                pair.getFirst().equals(EnumWrappers.ItemSlot.HEAD)){
-            return true;
-        }
-        return false;
+                pair.getFirst().equals(EnumWrappers.ItemSlot.HEAD);
     }
 
     public enum ArmorType{
         HELMET(5), CHEST(6), LEGGS(7), BOOTS(8);
 
-        private int value;
+        private final int value;
 
         public static ArmorType getType(int value){
             for(int i = 0; i < values().length; i++){
