@@ -1,5 +1,6 @@
 package me.kteq.hiddenarmor.util;
 
+import me.kteq.hiddenarmor.message.MessageHandler;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -90,9 +91,10 @@ public abstract class CommandUtil extends BukkitCommand implements CommandExecut
     }
 
     public boolean execute(CommandSender sender, String alias, String [] arguments){
+        MessageHandler messageHandler = MessageHandler.getInstance();
         String permission = getPermission();
         if(!defaultPermission && permission != null && !sender.hasPermission(permission) && !sender.isOp()){
-            sender.sendMessage(StrUtil.color("&cYou don't have permission to execute this command."));
+            messageHandler.message(sender, "%command-no-permission%");
             return true;
         }
 
@@ -102,14 +104,14 @@ public abstract class CommandUtil extends BukkitCommand implements CommandExecut
         }
 
         if(playerOnly && !(sender instanceof Player)){
-            sender.sendMessage(StrUtil.color("&cOnly players can use this command."));
+            messageHandler.message(sender, "%command-player-only%");
             return true;
         }
 
         if (cooldownPlayers != null && sender instanceof Player){
             Player player = (Player) sender;
             if(cooldownPlayers.contains(player.getUniqueId())){
-                sender.sendMessage(StrUtil.color("&cPlease, wait before using this command again."));
+                messageHandler.message(sender, "%command-delay%");
                 return true;
             }
 

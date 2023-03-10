@@ -1,7 +1,8 @@
 package me.kteq.hiddenarmor.command;
 
 import me.kteq.hiddenarmor.HiddenArmor;
-import me.kteq.hiddenarmor.armormanager.ArmorManager;
+import me.kteq.hiddenarmor.manager.ArmorManager;
+import me.kteq.hiddenarmor.message.MessageHandler;
 import me.kteq.hiddenarmor.util.CommandUtil;
 import me.kteq.hiddenarmor.util.StrUtil;
 import net.md_5.bungee.api.ChatMessageType;
@@ -11,38 +12,48 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class ToggleArmorCommand {
     HiddenArmor plugin;
     ArmorManager armorManager;
 
-    public ToggleArmorCommand(HiddenArmor pl, ArmorManager am){
-        armorManager = am;
-        plugin = pl;
-        new CommandUtil(plugin,"togglearmor", 0,1, false, plugin.isToggleDefault()){
+    public ToggleArmorCommand(HiddenArmor plugin, ArmorManager armorManager){
+        this.armorManager = armorManager;
+        this.plugin = plugin;
+        new CommandUtil(ToggleArmorCommand.this.plugin,"togglearmor", 0,1, false, ToggleArmorCommand.this.plugin.isToggleDefault()){
 
             @Override
             public void sendUsage(CommandSender sender) {
-                if(sender instanceof Player)
-                    sender.sendMessage(plugin.getPrefix() + StrUtil.color("&2Correct use:&f /togglearmor " + (canUseArg(sender, "other") ? "[player]" : "")));
-                else
-                    sender.sendMessage(plugin.getPrefix() + StrUtil.color("&2Correct use:&f /togglearmor <player>"));
+                MessageHandler messageHandler = MessageHandler.getInstance();
+                Map<String, String> placeholderMap = new HashMap<>();
+                if(sender instanceof Player) {
+                    String usage = "/togglearmor" + (canUseArg(sender, "other") ? " [%player%]" : "");
+                    placeholderMap.put("usage", usage);
+                } else {
+                    placeholderMap.put("usage", "/togglearmor <%player%>");
+                }
+                messageHandler.message(sender, "%correct-usage%", false, placeholderMap);
             }
 
             @Override
             public boolean onCommand(CommandSender sender, String[] arguments){
                 Player player;
+                MessageHandler messageHandler = MessageHandler.getInstance();
                 if(arguments.length == 1) {
-                    if(!canUseArg(sender, "other") && !plugin.isToggleOtherDefault()) return false;
+                    if(!canUseArg(sender, "other") && !ToggleArmorCommand.this.plugin.isToggleOtherDefault()) return false;
                     String playerName = arguments[0];
                     player = Bukkit.getPlayer(playerName);
 
                     if(player == null){
-                        sender.sendMessage(plugin.getPrefix() + "Player not found.");
+                        messageHandler.message(sender, "%player-not-found%");
                         return true;
                     }
                 }else {
                     if (sender instanceof ConsoleCommandSender) {
-                        sender.sendMessage(plugin.getPrefix() + "To use this command in console, you must specify the player name: /togglearmor <player>");
+                        messageHandler.message(sender, "%console-togglearmor-warning%");
+                        sendUsage(sender);
                         return true;
                     } else {
                         player = (Player) sender;
@@ -51,19 +62,23 @@ public class ToggleArmorCommand {
 
                 String visibility;
 
-                if(plugin.hasPlayer(player)){
-                    plugin.removeHiddenPlayer(player);
-                    visibility = StrUtil.color("&bON");
+                if(ToggleArmorCommand.this.plugin.hasPlayer(player)){
+                    ToggleArmorCommand.this.plugin.removeHiddenPlayer(player);
+                    visibility = "%visibility-shown%";
                 }else {
-                    plugin.addHiddenPlayer(player);
-                    visibility =  StrUtil.color("&7OFF") ;
+                    ToggleArmorCommand.this.plugin.addHiddenPlayer(player);
+                    visibility = "%visibility-hidden%";
                 }
 
-                if(!player.equals(sender)) sender.sendMessage(player.getName() + "'s armor visibility: " + visibility);
+                Map<String, String> placeholderMap = new HashMap<>();
+                placeholderMap.put("visibility", visibility);
+                if(!player.equals(sender)) {
+                    placeholderMap.put("player", player.getName());
+                    messageHandler.message(sender, "%armor-visibility-other%", false, placeholderMap);
+                }
+                messageHandler.message(ChatMessageType.ACTION_BAR, player, "%armor-visibility%", false, placeholderMap);
 
-                player.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent("Armor visibility: " + visibility));
-
-                armorManager.updatePlayer(player);
+                ToggleArmorCommand.this.armorManager.updatePlayer(player);
 
                 return true;
             }

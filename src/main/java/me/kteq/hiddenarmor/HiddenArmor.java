@@ -2,6 +2,7 @@ package me.kteq.hiddenarmor;
 
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.ProtocolManager;
+import me.kteq.hiddenarmor.message.MessageHandler;
 import me.kteq.hiddenarmor.util.Metrics;
 import me.kteq.hiddenarmor.command.HiddenArmorCommand;
 import me.kteq.hiddenarmor.command.ToggleArmorCommand;
@@ -11,8 +12,7 @@ import me.kteq.hiddenarmor.listener.PotionEffectListener;
 import me.kteq.hiddenarmor.listener.InventoryShiftClickListener;
 import me.kteq.hiddenarmor.packet.ArmorOthersPacketListener;
 import me.kteq.hiddenarmor.packet.ArmorSelfPacketListener;
-import me.kteq.hiddenarmor.armormanager.ArmorManager;
-import me.kteq.hiddenarmor.util.StrUtil;
+import me.kteq.hiddenarmor.manager.ArmorManager;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.configuration.InvalidConfigurationException;
@@ -32,7 +32,6 @@ public final class HiddenArmor extends JavaPlugin {
     private File enabledPlayersFile = null;
     private FileConfiguration enabledPlayers;
 
-    private String prefix;
     private boolean isOld;
 
     private boolean ignoreLeatherArmor;
@@ -54,9 +53,10 @@ public final class HiddenArmor extends JavaPlugin {
         this.saveDefaultEnabledPlayers();
         isOld = Bukkit.getBukkitVersion().startsWith("1.16");
 
+        MessageHandler.getInstance().setup(this, getConfig().getString("default-locale", "en_us"), "&c[&fHiddenArmor&c] &f");
+
         // Define variables
         ignoredPlayers = new ArrayList<>();
-        prefix = StrUtil.color("&c[&fHiddenArmor&c] &f");
 
         // Load initial config
         loadConfigVars();
@@ -138,10 +138,6 @@ public final class HiddenArmor extends JavaPlugin {
                 (hasPlayer(player) && player.isInvisible() && !hideInvisible) ||
                 (player.getGameMode().equals(GameMode.CREATIVE)) ||
                 (isPlayerIgnored(player));
-    }
-
-    public String getPrefix() {
-        return prefix;
     }
 
     public void addHiddenPlayer(Player player) {

@@ -1,4 +1,4 @@
-package me.kteq.hiddenarmor.armormanager;
+package me.kteq.hiddenarmor.manager;
 
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.ProtocolManager;
@@ -9,7 +9,6 @@ import com.google.common.collect.Multimap;
 import me.kteq.hiddenarmor.HiddenArmor;
 import me.kteq.hiddenarmor.util.ItemUtil;
 import me.kteq.hiddenarmor.util.ProtocolUtil;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.enchantments.Enchantment;

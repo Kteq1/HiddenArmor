@@ -1,4 +1,4 @@
-package me.kteq.hiddenarmor.armormanager;
+package me.kteq.hiddenarmor.manager;
 
 import me.kteq.hiddenarmor.util.ItemUtil;
 import me.kteq.hiddenarmor.util.StrUtil;

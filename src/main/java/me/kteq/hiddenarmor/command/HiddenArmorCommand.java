@@ -1,8 +1,8 @@
 package me.kteq.hiddenarmor.command;
 
 import me.kteq.hiddenarmor.HiddenArmor;
+import me.kteq.hiddenarmor.message.MessageHandler;
 import me.kteq.hiddenarmor.util.CommandUtil;
-import me.kteq.hiddenarmor.util.StrUtil;
 import org.bukkit.command.CommandSender;
 
 import java.io.IOException;
@@ -10,10 +10,10 @@ import java.io.IOException;
 public class HiddenArmorCommand {
     HiddenArmor plugin;
 
-    public HiddenArmorCommand(HiddenArmor pl){
-        this.plugin = pl;
+    public HiddenArmorCommand(HiddenArmor plugin){
+        this.plugin = plugin;
 
-        new CommandUtil(plugin, "hiddenarmor", 0, 1, false, true){
+        new CommandUtil(HiddenArmorCommand.this.plugin, "hiddenarmor", 0, 1, false, true){
             @Override
             public boolean onCommand(CommandSender sender, String[] arguments) throws IOException {
                 if((arguments.length < 1) || (arguments[0].equals("help"))){
@@ -21,13 +21,12 @@ public class HiddenArmorCommand {
                     return true;
                 }
 
-                switch (arguments[0]) {
-
-                }
+                MessageHandler messageHandler = MessageHandler.getInstance();
                 if(arguments[0].equalsIgnoreCase("reload") && canUseArg(sender, "reload")){
-                    plugin.reload();
-                    sender.sendMessage(plugin.getPrefix() + "Configuration reloaded!");
-                    sender.sendMessage(plugin.getPrefix() + "NOTE: Default permissions changes need a server restart to be applied.");
+                    HiddenArmorCommand.this.plugin.reload();
+                    messageHandler.reloadLocales();
+                    messageHandler.message(sender, "%reload-success%", true);
+                    messageHandler.message(sender, "%reload-default-permission-note%", true);
                     return true;
                 }
 
@@ -36,31 +35,33 @@ public class HiddenArmorCommand {
 
             @Override
             public void sendUsage(CommandSender sender) {
-                sender.sendMessage(StrUtil.color("&cCommand not found, use '/hiddenarmor help' to list all commands available."));
+                MessageHandler messageHandler = MessageHandler.getInstance();
+                messageHandler.message(sender, "%command-unknown%");
             }
 
         }.setCPermission("");
     }
 
     public void help(CommandSender sender){
-        sender.sendMessage(StrUtil.color("&6----------[ &fHiddenArmor &6]-----------------"));
+        MessageHandler messageHandler = MessageHandler.getInstance();
+        messageHandler.message(sender,"&6----------[ &fHiddenArmor &6]-----------------");
 
         // togglearmor
         if(canUse(sender, "hiddenarmor.toggle") || plugin.isToggleDefault())
-            sender.sendMessage(StrUtil.color("&e/togglearmor &6- &fToggle your armor visibility"));
+            messageHandler.message(sender, "&e/togglearmor &6- %help-togglearmor%");
 
         // togglearmor <player>
         if(canUse(sender ,"hiddenarmor.toggle.other"))
-            sender.sendMessage(StrUtil.color("&e/togglearmor <player> &6- &fToggle other player's armor visibility"));
+            messageHandler.message(sender, "&e/togglearmor <%player%> &6- %help-togglearmor-other%");
 
         // hiddenarmor reload
         if(canUse(sender, "hiddenarmor.reload"))
-            sender.sendMessage(StrUtil.color("&e/hiddenarmor reload &6- &fReloads configuration"));
+            messageHandler.message(sender, "&e/hiddenarmor reload &6- %help-reload%");
 
         // help
-        sender.sendMessage(StrUtil.color("&e/hiddenarmor help &6- &fShows this help message"));
+        messageHandler.message(sender, "&e/hiddenarmor help &6- %help-help%");
 
-        sender.sendMessage(StrUtil.color("&6----------------------------------------"));
+        messageHandler.message(sender,"&6----------------------------------------");
     }
 
     private boolean canUse(CommandSender sender, String perm){

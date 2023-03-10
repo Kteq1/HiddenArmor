@@ -8,7 +8,7 @@ import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.events.PacketEvent;
 
 import me.kteq.hiddenarmor.HiddenArmor;
-import me.kteq.hiddenarmor.armormanager.ArmorManager;
+import me.kteq.hiddenarmor.manager.ArmorManager;
 
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;

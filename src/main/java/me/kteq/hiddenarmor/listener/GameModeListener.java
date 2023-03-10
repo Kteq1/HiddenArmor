@@ -1,7 +1,7 @@
 package me.kteq.hiddenarmor.listener;
 
 import me.kteq.hiddenarmor.HiddenArmor;
-import me.kteq.hiddenarmor.armormanager.ArmorManager;
+import me.kteq.hiddenarmor.manager.ArmorManager;
 import me.kteq.hiddenarmor.util.EventUtil;
 import org.bukkit.GameMode;
 import org.bukkit.event.EventHandler;
