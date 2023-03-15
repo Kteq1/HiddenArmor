@@ -114,7 +114,7 @@ public class HiddenArmorCommand {
 
         //hiddenarmor <toggle/hide/show> <player>
         if(canUse(sender ,"hiddenarmor.toggle.other") || (togglePermission && toggleOtherPermission))
-            messageHandler.message(sender, "&e/hiddenarmor <toggle/hide/show> &6- %help-togglearmor-other%");
+            messageHandler.message(sender, "&e/hiddenarmor <toggle/hide/show> [%player%] &6- %help-togglearmor-other%");
 
         // hiddenarmor reload
         if(canUse(sender, "hiddenarmor.reload"))
