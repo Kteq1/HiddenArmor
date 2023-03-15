@@ -1,4 +1,4 @@
-package me.kteq.hiddenarmor.message;
+package me.kteq.hiddenarmor.handler;
 
 import me.kteq.hiddenarmor.util.ConfigUtil;
 import me.kteq.hiddenarmor.util.StrUtil;

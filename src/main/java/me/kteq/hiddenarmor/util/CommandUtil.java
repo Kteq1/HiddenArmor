@@ -1,6 +1,6 @@
 package me.kteq.hiddenarmor.util;
 
-import me.kteq.hiddenarmor.message.MessageHandler;
+import me.kteq.hiddenarmor.handler.MessageHandler;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;

@@ -1,7 +1,7 @@
 package me.kteq.hiddenarmor.command;
 
 import me.kteq.hiddenarmor.HiddenArmor;
-import me.kteq.hiddenarmor.message.MessageHandler;
+import me.kteq.hiddenarmor.handler.MessageHandler;
 import me.kteq.hiddenarmor.util.CommandUtil;
 import org.bukkit.command.CommandSender;
 
@@ -13,7 +13,7 @@ public class HiddenArmorCommand {
     public HiddenArmorCommand(HiddenArmor plugin){
         this.plugin = plugin;
 
-        new CommandUtil(HiddenArmorCommand.this.plugin, "hiddenarmor", 0, 1, false, true){
+        new CommandUtil(plugin, "hiddenarmor", 0, 1, false, true){
             @Override
             public boolean onCommand(CommandSender sender, String[] arguments) throws IOException {
                 if((arguments.length < 1) || (arguments[0].equals("help"))){
@@ -23,7 +23,7 @@ public class HiddenArmorCommand {
 
                 MessageHandler messageHandler = MessageHandler.getInstance();
                 if(arguments[0].equalsIgnoreCase("reload") && canUseArg(sender, "reload")){
-                    HiddenArmorCommand.this.plugin.reload();
+                    plugin.reloadConfig();
                     messageHandler.reloadLocales();
                     messageHandler.message(sender, "%reload-success%", true);
                     messageHandler.message(sender, "%reload-default-permission-note%", true);
@@ -47,7 +47,7 @@ public class HiddenArmorCommand {
         messageHandler.message(sender,"&6----------[ &fHiddenArmor &6]-----------------");
 
         // togglearmor
-        if(canUse(sender, "hiddenarmor.toggle") || plugin.isToggleDefault())
+        if(canUse(sender, "hiddenarmor.toggle") || plugin.getConfig().getBoolean("default-permissions.toggle"))
             messageHandler.message(sender, "&e/togglearmor &6- %help-togglearmor%");
 
         // togglearmor <player>

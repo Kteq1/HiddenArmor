@@ -1,7 +1,8 @@
 package me.kteq.hiddenarmor.listener;
 
 import me.kteq.hiddenarmor.HiddenArmor;
-import me.kteq.hiddenarmor.manager.ArmorManager;
+import me.kteq.hiddenarmor.handler.ArmorPacketHandler;
+import me.kteq.hiddenarmor.manager.HiddenArmorManager;
 import me.kteq.hiddenarmor.util.EventUtil;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -14,17 +15,17 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 public class InventoryShiftClickListener implements Listener {
     HiddenArmor plugin;
-    ArmorManager armorManager;
+    HiddenArmorManager hiddenArmorManager;
 
-    public InventoryShiftClickListener(HiddenArmor pl, ArmorManager am){
-        this.plugin = pl;
-        this.armorManager = am;
-        EventUtil.register(this, pl);
+    public InventoryShiftClickListener(HiddenArmor plugin){
+        this.plugin = plugin;
+        this.hiddenArmorManager = plugin.getHiddenArmorManager();
+        EventUtil.register(this, plugin);
     }
 
     @EventHandler
     public void onShiftClickArmor(InventoryClickEvent event){
-        if(!plugin.hasPlayer((Player) event.getWhoClicked())) return;
+        if(!hiddenArmorManager.isArmorHidden((Player) event.getWhoClicked())) return;
         if(!(event.getClickedInventory() instanceof PlayerInventory)) return;
         if(!event.isShiftClick()) return;
 
@@ -36,14 +37,14 @@ public class InventoryShiftClickListener implements Listener {
         if(inv == null) return;
         if(armor == null) return;
 
-        if((armor.getType().toString().endsWith("_HELMET") && inv.getHelmet()==null) ||
-                ((armor.getType().toString().endsWith("_CHESTPLATE") || armor.getType().equals(Material.ELYTRA)) && inv.getChestplate()==null) ||
-                (armor.getType().toString().endsWith("_LEGGINGS") && inv.getLeggings()==null) ||
-                (armor.getType().toString().endsWith("_BOOTS") && inv.getBoots()==null)){
+        if((armor.getType().toString().endsWith("_HELMET") && inv.getHelmet() == null) ||
+                ((armor.getType().toString().endsWith("_CHESTPLATE") || armor.getType().equals(Material.ELYTRA)) && inv.getChestplate() == null) ||
+                (armor.getType().toString().endsWith("_LEGGINGS") && inv.getLeggings() == null) ||
+                (armor.getType().toString().endsWith("_BOOTS") && inv.getBoots() == null)){
             new BukkitRunnable(){
                 @Override
                 public void run() {
-                    armorManager.updateSelf(player);
+                    ArmorPacketHandler.getInstance().updateSelf(player);
                 }
             }.runTaskLater(plugin, 1L);
         }

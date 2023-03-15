@@ -1,15 +1,15 @@
 package me.kteq.hiddenarmor.command;
 
 import me.kteq.hiddenarmor.HiddenArmor;
-import me.kteq.hiddenarmor.manager.ArmorManager;
-import me.kteq.hiddenarmor.message.MessageHandler;
+import me.kteq.hiddenarmor.handler.ArmorPacketHandler;
+import me.kteq.hiddenarmor.manager.HiddenArmorManager;
+import me.kteq.hiddenarmor.handler.MessageHandler;
 import me.kteq.hiddenarmor.util.CommandUtil;
-import me.kteq.hiddenarmor.util.StrUtil;
 import net.md_5.bungee.api.ChatMessageType;
-import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
 import java.util.HashMap;
@@ -17,12 +17,13 @@ import java.util.Map;
 
 public class ToggleArmorCommand {
     HiddenArmor plugin;
-    ArmorManager armorManager;
+    HiddenArmorManager hiddenArmorManager;
 
-    public ToggleArmorCommand(HiddenArmor plugin, ArmorManager armorManager){
-        this.armorManager = armorManager;
+    public ToggleArmorCommand(HiddenArmor plugin){
         this.plugin = plugin;
-        new CommandUtil(ToggleArmorCommand.this.plugin,"togglearmor", 0,1, false, ToggleArmorCommand.this.plugin.isToggleDefault()){
+        this.hiddenArmorManager = plugin.getHiddenArmorManager();
+        FileConfiguration config = plugin.getConfig();
+        new CommandUtil(this.plugin,"togglearmor", 0,1, false, config.getBoolean("default-permissions.toggle")){
 
             @Override
             public void sendUsage(CommandSender sender) {
@@ -42,7 +43,7 @@ public class ToggleArmorCommand {
                 Player player;
                 MessageHandler messageHandler = MessageHandler.getInstance();
                 if(arguments.length == 1) {
-                    if(!canUseArg(sender, "other") && !ToggleArmorCommand.this.plugin.isToggleOtherDefault()) return false;
+                    if(!canUseArg(sender, "other") && !config.getBoolean("default-permissions.toggle")) return false;
                     String playerName = arguments[0];
                     player = Bukkit.getPlayer(playerName);
 
@@ -60,26 +61,14 @@ public class ToggleArmorCommand {
                     }
                 }
 
-                String visibility;
+                hiddenArmorManager.togglePlayer(player, true);
 
-                if(ToggleArmorCommand.this.plugin.hasPlayer(player)){
-                    ToggleArmorCommand.this.plugin.removeHiddenPlayer(player);
-                    visibility = "%visibility-shown%";
-                }else {
-                    ToggleArmorCommand.this.plugin.addHiddenPlayer(player);
-                    visibility = "%visibility-hidden%";
-                }
-
-                Map<String, String> placeholderMap = new HashMap<>();
-                placeholderMap.put("visibility", visibility);
                 if(!player.equals(sender)) {
+                    Map<String, String> placeholderMap = new HashMap<>();
+                    placeholderMap.put("visibility", hiddenArmorManager.isEnabled(player) ? "%visibility-shown%" : "%visibility-hidden%");
                     placeholderMap.put("player", player.getName());
                     messageHandler.message(sender, "%armor-visibility-other%", false, placeholderMap);
                 }
-                messageHandler.message(ChatMessageType.ACTION_BAR, player, "%armor-visibility%", false, placeholderMap);
-
-                ToggleArmorCommand.this.armorManager.updatePlayer(player);
-
                 return true;
             }
         }.setCPermission("toggle").setUsage("/togglearmor").setDescription("Toggle armor invisibility");
