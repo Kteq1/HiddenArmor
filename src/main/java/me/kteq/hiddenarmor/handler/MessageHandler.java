@@ -43,7 +43,6 @@ public class MessageHandler {
 
     public void reloadLocales() {
         setDefaultLocale(plugin.getConfig().getString("locale.default-locale", "en_us").replaceAll("-", "_"));
-        Bukkit.broadcastMessage(defaultLocale);
 
         Set<String> includedLocales = new HashSet<>();
         includedLocales.add("en_us");

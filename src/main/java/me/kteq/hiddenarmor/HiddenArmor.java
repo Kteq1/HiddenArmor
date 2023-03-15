@@ -32,8 +32,6 @@ public final class HiddenArmor extends JavaPlugin {
 
         isOld = Bukkit.getBukkitVersion().startsWith("1.16");
 
-
-
         // Instantiate managers
         ProtocolManager protocolManager = ProtocolLibrary.getProtocolManager();
         this.hiddenArmorManager = new HiddenArmorManager(this);

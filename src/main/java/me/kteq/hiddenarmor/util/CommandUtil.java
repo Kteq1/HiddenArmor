@@ -71,8 +71,8 @@ public abstract class CommandUtil extends BukkitCommand implements CommandExecut
     }
 
     public CommandUtil setCPermission(String perm) {
-        super.setPermission(defaultPermission ? null : this.pluginName+"."+perm);
-        this.permission = this.pluginName+"."+perm;
+        super.setPermission(defaultPermission ? null : this.pluginName+"." + perm);
+        this.permission = this.pluginName+"." + perm;
         return this;
     }
 

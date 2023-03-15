@@ -39,11 +39,11 @@ public class ToggleArmorCommand {
             }
 
             @Override
-            public boolean onCommand(CommandSender sender, String[] arguments){
+            public boolean onCommand(CommandSender sender, String[] arguments) {
                 Player player;
                 MessageHandler messageHandler = MessageHandler.getInstance();
                 if(arguments.length == 1) {
-                    if(!canUseArg(sender, "other") && !config.getBoolean("default-permissions.toggle")) return false;
+                    if(!canUseArg(sender, "other") && !config.getBoolean("default-permissions.toggle-other")) return false;
                     String playerName = arguments[0];
                     player = Bukkit.getPlayer(playerName);
 
