@@ -4,6 +4,7 @@ import me.kteq.hiddenarmor.util.ConfigUtil;
 import me.kteq.hiddenarmor.util.StrUtil;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
+import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -15,22 +16,17 @@ import java.io.File;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 public class MessageHandler {
     private static MessageHandler instance;
 
     private Plugin plugin;
-    private String defaultLang;
+    private String defaultLocale;
     private String prefix = "";
     private Map<String, FileConfiguration> localeMap;
-
-    public void setup(Plugin plugin, String defaultLang, String prefix) {
-        this.plugin = plugin;
-        reloadLocales();
-        setDefaultLang(defaultLang);
-        setPrefix(prefix);
-    }
 
     public static MessageHandler getInstance() {
         if (instance == null) {
@@ -39,9 +35,28 @@ public class MessageHandler {
         return instance;
     }
 
+    public void setup(Plugin plugin, String prefix) {
+        this.plugin = plugin;
+        setPrefix(prefix);
+        reloadLocales();
+    }
+
     public void reloadLocales() {
-        plugin.saveResource("locale/en_us.yml", false);
-        plugin.saveResource("locale/pt_br.yml", false);
+        setDefaultLocale(plugin.getConfig().getString("locale.default-locale", "en_us").replaceAll("-", "_"));
+        Bukkit.broadcastMessage(defaultLocale);
+
+        Set<String> includedLocales = new HashSet<>();
+        includedLocales.add("en_us");
+        includedLocales.add("pt_br");
+
+        for (String locale : includedLocales) {
+            String path = "locale/" + locale + ".yml";
+            if (!new File(plugin.getDataFolder().getAbsolutePath() + "/" + path).exists()) {
+                plugin.saveResource(path, false);
+            }
+        }
+
+
 
         localeMap = new HashMap<>();
         File localeFolder = new File(plugin.getDataFolder().getAbsolutePath() + "/locale");
@@ -51,8 +66,8 @@ public class MessageHandler {
         }
     }
 
-    public void setDefaultLang(String defaultLang) {
-        this.defaultLang = defaultLang;
+    public void setDefaultLocale(String defaultLocale) {
+        this.defaultLocale = defaultLocale;
     }
 
     public void setPrefix(String prefix) {
@@ -114,11 +129,11 @@ public class MessageHandler {
         if (sender instanceof Player player) {
             locale = player.getLocale();
         } else {
-            locale = "en_us";
+            locale = defaultLocale;
         }
         FileConfiguration localeYaml = localeMap.get(locale);
         if (localeYaml == null) {
-            localeYaml = localeMap.get(defaultLang);
+            localeYaml = localeMap.get(defaultLocale);
             if (localeYaml == null) {
                 localeYaml = getDefaultResourceLocale();
             }

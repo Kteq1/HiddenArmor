@@ -5,6 +5,7 @@ import me.kteq.hiddenarmor.handler.ArmorPacketHandler;
 import me.kteq.hiddenarmor.handler.MessageHandler;
 import net.md_5.bungee.api.ChatMessageType;
 import org.bukkit.GameMode;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -23,9 +24,9 @@ public class HiddenArmorManager {
     private File enabledPlayersFile = null;
     private FileConfiguration enabledPlayersConfig;
 
-    private Set<Player> enabledPlayers = new HashSet<>();;
-    private Set<Predicate<Player>> forceDisablePredicates = new HashSet<>();
-    private Set<Predicate<Player>> forceEnablePredicates = new HashSet<>();
+    private Set<OfflinePlayer> enabledPlayers = new HashSet<>();
+    private final Set<Predicate<Player>> forceDisablePredicates = new HashSet<>();
+    private final Set<Predicate<Player>> forceEnablePredicates = new HashSet<>();
 
 
     public HiddenArmorManager(HiddenArmor plugin) {
@@ -96,7 +97,7 @@ public class HiddenArmorManager {
     }
 
     public void saveCurrentEnabledPlayers() {
-        List<UUID> enabledUUIDs = this.enabledPlayers.stream().map(player -> player.getUniqueId()).toList();
+        List<String> enabledUUIDs = this.enabledPlayers.stream().map(player -> player.getUniqueId().toString()).toList();
 
         enabledPlayersConfig.set("enabled-players", enabledUUIDs);
         try {
@@ -108,7 +109,7 @@ public class HiddenArmorManager {
 
     private void loadEnabledPlayers() {
         loadEnabledPlayersConfig();
-        this.enabledPlayers = enabledPlayersConfig.getStringList("enabled-players").stream().map(this.plugin.getServer()::getPlayer).collect(Collectors.toSet());
+        this.enabledPlayers = enabledPlayersConfig.getStringList("enabled-players").stream().map(uuidPlayer -> this.plugin.getServer().getOfflinePlayer(UUID.fromString(uuidPlayer))).collect(Collectors.toSet());
     }
 
     private void loadEnabledPlayersConfig() {

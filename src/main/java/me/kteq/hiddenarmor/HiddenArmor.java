@@ -32,20 +32,23 @@ public final class HiddenArmor extends JavaPlugin {
 
         isOld = Bukkit.getBukkitVersion().startsWith("1.16");
 
-        MessageHandler.getInstance().setup(this, getConfig().getString("default-locale", "en_us"), "&c[&fHiddenArmor&c] &f");
+
 
         // Instantiate managers
-        ProtocolManager manager = ProtocolLibrary.getProtocolManager();
+        ProtocolManager protocolManager = ProtocolLibrary.getProtocolManager();
         this.hiddenArmorManager = new HiddenArmorManager(this);
 
-        ArmorPacketHandler.getInstance().setup(this, manager);
+        ArmorPacketHandler.getInstance().setup(this, protocolManager);
+        MessageHandler.getInstance().setup(this, "&c[&fHiddenArmor&c] &f");
 
         // Enable commands
         new ToggleArmorCommand(this);
         new HiddenArmorCommand(this);
+
         // Register ProtocolLib packet listeners
-        new ArmorSelfPacketListener(this, manager);
-        new ArmorOthersPacketListener(this, manager);
+        new ArmorSelfPacketListener(this, protocolManager);
+        new ArmorOthersPacketListener(this, protocolManager);
+
         // Register event listeners
         new InventoryShiftClickListener(this);
         new GameModeListener(this);

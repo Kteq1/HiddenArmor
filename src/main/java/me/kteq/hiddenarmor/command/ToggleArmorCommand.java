@@ -71,6 +71,6 @@ public class ToggleArmorCommand {
                 }
                 return true;
             }
-        }.setCPermission("toggle").setUsage("/togglearmor").setDescription("Toggle armor invisibility");
+        }.setCPermission("toggle").setUsage("/togglearmor").setDescription("Toggle armor visibility");
     }
 }

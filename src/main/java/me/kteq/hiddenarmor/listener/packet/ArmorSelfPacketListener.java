@@ -151,7 +151,7 @@ public class ArmorSelfPacketListener {
     private String getPieceName(ItemStack itemStack){
         String name = itemStack.getType().toString();
         name = name.replaceAll("_", " ");
-        WordUtils.capitalizeFully(name);
+        name = WordUtils.capitalizeFully(name);
         if(itemStack.getItemMeta().hasDisplayName())
             name = itemStack.getItemMeta().getDisplayName() + StrUtil.color(" &r&8(") + name + ")";
         else
