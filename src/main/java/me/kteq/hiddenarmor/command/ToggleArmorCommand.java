@@ -65,7 +65,7 @@ public class ToggleArmorCommand {
 
                 if(!player.equals(sender)) {
                     Map<String, String> placeholderMap = new HashMap<>();
-                    placeholderMap.put("visibility", hiddenArmorManager.isEnabled(player) ? "%visibility-shown%" : "%visibility-hidden%");
+                    placeholderMap.put("visibility", hiddenArmorManager.isEnabled(player) ? "%visibility-hidden%" : "%visibility-shown%");
                     placeholderMap.put("player", player.getName());
                     messageHandler.message(sender, "%armor-visibility-other%", false, placeholderMap);
                 }
