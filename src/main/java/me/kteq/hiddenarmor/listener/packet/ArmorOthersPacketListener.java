@@ -37,7 +37,8 @@ public class ArmorOthersPacketListener {
                 Player player = event.getPlayer();
 
                 LivingEntity livingEntity = (LivingEntity) manager.getEntityFromID(player.getWorld(), packet.getIntegers().read(0));
-                if(!(livingEntity instanceof Player packetPlayer)) return;
+                if(!(livingEntity instanceof Player)) return;
+                Player packetPlayer = (Player) livingEntity;
 
                 if(!hiddenArmorManager.isArmorHidden(packetPlayer)) return;
 

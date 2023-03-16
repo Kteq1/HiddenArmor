@@ -82,9 +82,15 @@ public class HiddenArmorCommand {
                 String action = arguments[0].toLowerCase();
 
                 switch (action) {
-                    case "toggle" -> hiddenArmorManager.togglePlayer(player, true);
-                    case "hide" -> hiddenArmorManager.enablePlayer(player, true);
-                    case "show" -> hiddenArmorManager.disablePlayer(player, true);
+                    case "toggle":
+                        hiddenArmorManager.togglePlayer(player, true);
+                        break;
+                    case "hide":
+                        hiddenArmorManager.enablePlayer(player, true);
+                        break;
+                    case "show":
+                        hiddenArmorManager.disablePlayer(player, true);
+                        break;
                 }
 
                 if (!player.equals(sender)) {

@@ -103,7 +103,8 @@ public class MessageHandler {
             message = this.prefix + message;
         }
 
-        if (sender instanceof Player player) {
+        if (sender instanceof Player) {
+            Player player = (Player) sender;
             player.spigot().sendMessage(messageType, new TextComponent(StrUtil.color(message)));
         } else if (sender instanceof ConsoleCommandSender && messageType.equals(ChatMessageType.CHAT)) {
             sender.sendMessage(StrUtil.color(message));
@@ -125,7 +126,8 @@ public class MessageHandler {
 
     private String getLocalizedMessage(CommandSender sender, String messageKey) {
         String locale;
-        if (sender instanceof Player player) {
+        if (sender instanceof Player) {
+            Player player = (Player) sender;
             locale = player.getLocale();
         } else {
             locale = defaultLocale;
