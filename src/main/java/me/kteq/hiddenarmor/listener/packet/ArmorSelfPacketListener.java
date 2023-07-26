@@ -49,13 +49,17 @@ public class ArmorSelfPacketListener {
 
                 if(packet.getType().equals(PacketType.Play.Server.SET_SLOT) && packet.getIntegers().read(0).equals(0) && packet.getIntegers().read(ArmorSelfPacketListener.this.plugin.isOld() ? 1 : 2) > 4 && packet.getIntegers().read(ArmorSelfPacketListener.this.plugin.isOld() ? 1 : 2) < 9){
                     ItemStack itemStack = packet.getItemModifier().read(0);
-                    if(itemStack!=null) packet.getItemModifier().write(0, getHiddenArmorPiece(itemStack));
+                    if(itemStack != null) {
+                        packet.getItemModifier().write(0, getHiddenArmorPiece(itemStack));
+                    }
                 }
 
                 if(packet.getType().equals(PacketType.Play.Server.WINDOW_ITEMS) && packet.getIntegers().read(0).equals(0)){
                     List<ItemStack> itemStacks = packet.getItemListModifier().read(0);
-                    itemStacks.stream().skip(5).limit(4).forEach(e -> {
-                        if(e!=null) e.setItemMeta(getHiddenArmorPiece(e).getItemMeta());
+                    itemStacks.stream().skip(5).limit(4).forEach(itemStack -> {
+                        if(itemStack != null) {
+                            itemStack.setItemMeta(getHiddenArmorPiece(itemStack).getItemMeta());
+                        }
                     });
                 }
             }
@@ -74,14 +78,14 @@ public class ArmorSelfPacketListener {
             lore = new ArrayList<>();
 
         String durability = getPieceDurability(itemStack);
-        if(durability!=null) lore.add(durability);
+        if(durability != null) lore.add(durability);
 
         if(itemStack.getType().equals(Material.ELYTRA)){
             itemMeta = getHiddenElytraMeta(itemStack);
         }
 
         Material button = getArmorButtonMaterial(itemStack);
-        if(button!=null){
+        if(button != null){
             String name = getPieceName(itemStack);
             if(name != null) itemMeta.setDisplayName(name);
             itemStack.setType(button);

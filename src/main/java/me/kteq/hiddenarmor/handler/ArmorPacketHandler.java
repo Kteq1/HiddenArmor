@@ -15,16 +15,18 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 public class ArmorPacketHandler {
-    private static ArmorPacketHandler INSTANCE;
+    private static ArmorPacketHandler instance;
 
     private HiddenArmor plugin;
     private ProtocolManager protocolManager;
 
+    private ArmorPacketHandler() {}
+
     public static ArmorPacketHandler getInstance() {
-        if (INSTANCE == null) {
-            INSTANCE = new ArmorPacketHandler();
+        if (instance == null) {
+            instance = new ArmorPacketHandler();
         }
-        return INSTANCE;
+        return instance;
     }
 
     public void setup(HiddenArmor plugin, ProtocolManager protocolManager) {

@@ -24,7 +24,7 @@ public class HiddenArmorManager {
     private File enabledPlayersFile = null;
     private FileConfiguration enabledPlayersConfig;
 
-    private Set<OfflinePlayer> enabledPlayers = new HashSet<>();
+    private Set<UUID> enabledPlayersUUID = new HashSet<>();
     private final Set<Predicate<Player>> forceDisablePredicates = new HashSet<>();
     private final Set<Predicate<Player>> forceEnablePredicates = new HashSet<>();
 
@@ -51,7 +51,7 @@ public class HiddenArmorManager {
             MessageHandler.getInstance().message(ChatMessageType.ACTION_BAR, player, "%armor-visibility%", false, placeholderMap);
         }
 
-        this.enabledPlayers.add(player);
+        this.enabledPlayersUUID.add(player.getUniqueId());
         ArmorPacketHandler.getInstance().updatePlayer(player);
     }
 
@@ -63,12 +63,12 @@ public class HiddenArmorManager {
             MessageHandler.getInstance().message(ChatMessageType.ACTION_BAR, player, "%armor-visibility%", false, placeholderMap);
         }
 
-        enabledPlayers.remove(player);
+        enabledPlayersUUID.remove(player.getUniqueId());
         ArmorPacketHandler.getInstance().updatePlayer(player);
     }
 
     public boolean isEnabled(Player player) {
-        return this.enabledPlayers.contains(player);
+        return this.enabledPlayersUUID.contains(player.getUniqueId());
     }
 
     public boolean isArmorHidden(Player player) {
@@ -97,7 +97,7 @@ public class HiddenArmorManager {
     }
 
     public void saveCurrentEnabledPlayers() {
-        List<String> enabledUUIDs = this.enabledPlayers.stream().map(player -> player.getUniqueId().toString()).toList();
+        List<String> enabledUUIDs = this.enabledPlayersUUID.stream().map(uuid -> uuid.toString()).collect(Collectors.toList());
 
         enabledPlayersConfig.set("enabled-players", enabledUUIDs);
         try {
@@ -109,7 +109,7 @@ public class HiddenArmorManager {
 
     private void loadEnabledPlayers() {
         loadEnabledPlayersConfig();
-        this.enabledPlayers = enabledPlayersConfig.getStringList("enabled-players").stream().map(uuidPlayer -> this.plugin.getServer().getOfflinePlayer(UUID.fromString(uuidPlayer))).collect(Collectors.toSet());
+        this.enabledPlayersUUID = enabledPlayersConfig.getStringList("enabled-players").stream().map(uuidString -> UUID.fromString(uuidString)).collect(Collectors.toSet());
     }
 
     private void loadEnabledPlayersConfig() {

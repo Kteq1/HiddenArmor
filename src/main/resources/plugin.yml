@@ -5,3 +5,9 @@ api-version: 1.16
 authors: [ Kteq ]
 description: Let players hide their armor and show off their skins
 depend: [ProtocolLib]
+commands:
+  hiddenarmor:
+    description: "Main Hidden Armor command."
+    aliases: [ha, armor]
+  togglearmor:
+    description: "Toggles armor visibility."

@@ -15,5 +15,5 @@ player: "jogador"
 command-no-permission: "&cVocê não tem permissão para executar este comando."
 command-delay: "&cPor favor, espere antes de usar este comando novamente."
 command-player-only: "&cApenas jogadores podem usar este comando."
-command-unknown: "&cComando desconhecido, use '/hiddenarmor help' para exibir todos os comandos disponíveis."
-
+command-invalid: "&cComando inválido, use '/hiddenarmor help' para exibir todos os comandos disponíveis."
+command-error: "&4Ocorreu um erro ao executar o comando."

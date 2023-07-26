@@ -2,11 +2,12 @@ package me.kteq.hiddenarmor;
 
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.ProtocolManager;
+import me.kteq.hiddenarmor.command.HiddenArmorTabCompleter;
+import me.kteq.hiddenarmor.command.HiddenArmorCommand;
+import me.kteq.hiddenarmor.command.ToggleArmorCommand;
 import me.kteq.hiddenarmor.handler.ArmorPacketHandler;
 import me.kteq.hiddenarmor.handler.MessageHandler;
 import me.kteq.hiddenarmor.util.Metrics;
-import me.kteq.hiddenarmor.command.HiddenArmorCommand;
-import me.kteq.hiddenarmor.command.ToggleArmorCommand;
 import me.kteq.hiddenarmor.listener.EntityToggleGlideListener;
 import me.kteq.hiddenarmor.listener.GameModeListener;
 import me.kteq.hiddenarmor.listener.PotionEffectListener;
@@ -40,8 +41,13 @@ public final class HiddenArmor extends JavaPlugin {
         MessageHandler.getInstance().setup(this, "&c[&fHiddenArmor&c] &f");
 
         // Enable commands
-        new ToggleArmorCommand(this);
-        new HiddenArmorCommand(this);
+        new ToggleArmorCommand(this, "togglearmor")
+                .setPermission("togglearmor.toggle")
+                .setPermissionRequired(!getConfig().getBoolean("default-permissions.toggle"));
+        new HiddenArmorCommand(this, "hiddenarmor")
+                .setPermission("hiddenarmor")
+                .setPermissionRequired(false)
+                .setTabCompleter(new HiddenArmorTabCompleter(this));
 
         // Register ProtocolLib packet listeners
         new ArmorSelfPacketListener(this, protocolManager);
@@ -52,6 +58,8 @@ public final class HiddenArmor extends JavaPlugin {
         new GameModeListener(this);
         new PotionEffectListener(this);
         new EntityToggleGlideListener(this);
+
+        getCommand("hiddenarmor").setTabCompleter(new HiddenArmorTabCompleter(this));
 
         // Metrics
         Metrics metrics = new Metrics(this, 14419);

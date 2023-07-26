@@ -4,7 +4,6 @@ import me.kteq.hiddenarmor.util.ConfigUtil;
 import me.kteq.hiddenarmor.util.StrUtil;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
-import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -27,6 +26,7 @@ public class MessageHandler {
     private String defaultLocale;
     private String prefix = "";
     private Map<String, FileConfiguration> localeMap;
+    
 
     public static MessageHandler getInstance() {
         if (instance == null) {

@@ -5,8 +5,7 @@ import org.bukkit.ChatColor;
 import java.util.ArrayList;
 import java.util.List;
 
-public class StrUtil {
-
+public abstract class StrUtil {
     public static String color(String s){
         return ChatColor.translateAlternateColorCodes('&', s);
     }
