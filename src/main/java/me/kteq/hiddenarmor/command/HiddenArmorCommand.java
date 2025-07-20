@@ -4,25 +4,29 @@ import me.kteq.hiddenarmor.HiddenArmor;
 import me.kteq.hiddenarmor.command.util.AbstractCommand;
 import me.kteq.hiddenarmor.command.util.CommandStatus;
 import me.kteq.hiddenarmor.handler.MessageHandler;
-import me.kteq.hiddenarmor.manager.HiddenArmorManager;
+import me.kteq.hiddenarmor.manager.PlayerManager;
+import me.kteq.hiddenarmor.util.ConfigHolder;
 import me.kteq.hiddenarmor.util.PermissionUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class HiddenArmorCommand extends AbstractCommand {
-    HiddenArmor plugin;
-    HiddenArmorManager hiddenArmorManager;
+public class HiddenArmorCommand extends AbstractCommand implements ConfigHolder {
+    PlayerManager hiddenArmorManager;
+
+    private boolean defaultPermissionToggle;
+    private boolean defaultPermissionToggleOther;
 
     public HiddenArmorCommand(HiddenArmor plugin, String command) {
         super(plugin, command);
-        this.plugin = plugin;
-        this.hiddenArmorManager = plugin.getHiddenArmorManager();
+        plugin.addConfigHolder(this);
+        this.hiddenArmorManager = plugin.getPlayerManager();
     }
 
     @Override
@@ -32,7 +36,7 @@ public class HiddenArmorCommand extends AbstractCommand {
             return CommandStatus.SUCCESS;
         }
 
-        MessageHandler messageHandler = MessageHandler.getInstance();
+        MessageHandler messageHandler = plugin.getMessageHandler();
 
         String subcommand = arguments[0].toLowerCase();
 
@@ -52,17 +56,14 @@ public class HiddenArmorCommand extends AbstractCommand {
                 return CommandStatus.SUCCESS;
         }
 
-
-
-
         return CommandStatus.INVALID_USAGE;
     }
 
     private boolean toggleArmor(CommandSender sender, String[] arguments) {
-        if (!hasSubPermission(sender, "toggle") && !plugin.getConfig().getBoolean("default-permissions.toggle")) return false;
-        MessageHandler messageHandler = MessageHandler.getInstance();
+        if (!hasSubPermission(sender, "toggle") && !defaultPermissionToggle) return false;
+        MessageHandler messageHandler = plugin.getMessageHandler();
         Player player;
-        if (arguments.length == 2 && (hasSubPermission(sender, "toggle.other") || plugin.getConfig().getBoolean("default-permissions.toggle-other"))) {
+        if (arguments.length == 2 && (hasSubPermission(sender, "toggle.other") || defaultPermissionToggleOther)) {
             String playerName = arguments[1];
             player = Bukkit.getPlayer(playerName);
 
@@ -103,18 +104,15 @@ public class HiddenArmorCommand extends AbstractCommand {
     }
 
     private void help(CommandSender sender){
-        MessageHandler messageHandler = MessageHandler.getInstance();
+        MessageHandler messageHandler = plugin.getMessageHandler();
         messageHandler.message(sender,"&6----------[ &fHiddenArmor &6]-----------------");
 
-        boolean togglePermission = plugin.getConfig().getBoolean("default-permissions.toggle");
-        boolean toggleOtherPermission = plugin.getConfig().getBoolean("default-permissions.toggle-other");
-
-        //hiddenarmor <toggle/hide/show>
-        if(PermissionUtil.canUse(sender ,"hiddenarmor.toggle") || togglePermission)
+        // hiddenarmor <toggle/hide/show>
+        if(PermissionUtil.canUse(sender ,"hiddenarmor.toggle") || defaultPermissionToggle)
             messageHandler.message(sender, "&e/hiddenarmor <toggle/hide/show> &6- %help-togglearmor%");
 
-        //hiddenarmor <toggle/hide/show> <player>
-        if(PermissionUtil.canUse(sender ,"hiddenarmor.toggle.other") || (togglePermission && toggleOtherPermission))
+        // hiddenarmor <toggle/hide/show> <player>
+        if(PermissionUtil.canUse(sender ,"hiddenarmor.toggle.other") || (defaultPermissionToggle && defaultPermissionToggleOther))
             messageHandler.message(sender, "&e/hiddenarmor <toggle/hide/show> [%player%] &6- %help-togglearmor-other%");
 
         // hiddenarmor reload
@@ -127,4 +125,9 @@ public class HiddenArmorCommand extends AbstractCommand {
         messageHandler.message(sender,"&6----------------------------------------");
     }
 
+    @Override
+    public void loadConfig(FileConfiguration config) {
+        this.defaultPermissionToggle = config.getBoolean("default-permissions.toggle");
+        this.defaultPermissionToggleOther = config.getBoolean("default-permissions.toggle-other");
+    }
 }

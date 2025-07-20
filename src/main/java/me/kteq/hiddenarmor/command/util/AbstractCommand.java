@@ -1,18 +1,20 @@
 package me.kteq.hiddenarmor.command.util;
 
+import me.kteq.hiddenarmor.HiddenArmor;
 import me.kteq.hiddenarmor.handler.MessageHandler;
 import org.bukkit.command.*;
-import org.bukkit.plugin.java.JavaPlugin;
 
 
 public abstract class AbstractCommand implements CommandExecutor {
+    protected final HiddenArmor plugin;
     private PluginCommand pluginCommand;
 
     private String permission = null;
     private boolean permissionRequired = true;
     private boolean playerOnly = false;
 
-    public AbstractCommand(JavaPlugin plugin, String command) {
+    public AbstractCommand(HiddenArmor plugin, String command) {
+        this.plugin = plugin;
         PluginCommand pluginCommand = plugin.getCommand(command);
         if (pluginCommand != null) {
             pluginCommand.setExecutor(this);
@@ -27,7 +29,7 @@ public abstract class AbstractCommand implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        MessageHandler messageHandler = MessageHandler.getInstance();
+        MessageHandler messageHandler = plugin.getMessageHandler();
         if (sender instanceof ConsoleCommandSender && isPlayerOnly()) {
             messageHandler.message(sender, "%command-player-only%");
             return true;
@@ -36,11 +38,10 @@ public abstract class AbstractCommand implements CommandExecutor {
             messageHandler.message(sender, "%command-no-permission%");
             return true;
         }
-        CommandStatus commandStatus = null;
+        CommandStatus commandStatus;
         try {
             commandStatus = execute(sender, command, args);
         } catch (Exception e) {
-            commandStatus = CommandStatus.ERROR;
             messageHandler.message(sender, "%command-error%");
             throw new RuntimeException(e);
         }

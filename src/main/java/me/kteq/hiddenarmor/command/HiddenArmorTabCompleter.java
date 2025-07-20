@@ -1,19 +1,21 @@
 package me.kteq.hiddenarmor.command;
 
+import me.kteq.hiddenarmor.HiddenArmor;
+import me.kteq.hiddenarmor.util.ConfigHolder;
 import me.kteq.hiddenarmor.util.PermissionUtil;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
-import org.bukkit.plugin.Plugin;
+import org.bukkit.configuration.file.FileConfiguration;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class HiddenArmorTabCompleter implements TabCompleter {
-    private Plugin plugin;
+public class HiddenArmorTabCompleter implements TabCompleter, ConfigHolder {
+    private boolean defaultPermissionToggle;
 
-    public HiddenArmorTabCompleter(Plugin plugin) {
-        this.plugin = plugin;
+    public HiddenArmorTabCompleter(HiddenArmor plugin) {
+        plugin.addConfigHolder(this);
     }
 
     @Override
@@ -22,9 +24,8 @@ public class HiddenArmorTabCompleter implements TabCompleter {
         if(args.length > 1) return null;
         List<String> options = new ArrayList<>();
 
-        boolean togglePermission = plugin.getConfig().getBoolean("default-permissions.toggle");
 
-        if(PermissionUtil.canUse(sender ,"hiddenarmor.toggle") || togglePermission) {
+        if(PermissionUtil.canUse(sender ,"hiddenarmor.toggle") || defaultPermissionToggle) {
             options.add("toggle");
             options.add("hide");
             options.add("show");
@@ -35,5 +36,10 @@ public class HiddenArmorTabCompleter implements TabCompleter {
         options.add("help");
 
         return options;
+    }
+
+    @Override
+    public void loadConfig(FileConfiguration config) {
+        this.defaultPermissionToggle = config.getBoolean("default-permissions.toggle");
     }
 }

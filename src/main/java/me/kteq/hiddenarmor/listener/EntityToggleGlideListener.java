@@ -1,8 +1,8 @@
 package me.kteq.hiddenarmor.listener;
 
 import me.kteq.hiddenarmor.HiddenArmor;
-import me.kteq.hiddenarmor.handler.ArmorPacketHandler;
-import me.kteq.hiddenarmor.manager.HiddenArmorManager;
+import me.kteq.hiddenarmor.handler.ArmorUpdateHandler;
+import me.kteq.hiddenarmor.manager.PlayerManager;
 import me.kteq.hiddenarmor.util.EventUtil;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -12,12 +12,15 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 public class EntityToggleGlideListener implements Listener {
     HiddenArmor plugin;
-    HiddenArmorManager hiddenArmorManager;
+    PlayerManager playerManager;
+    ArmorUpdateHandler armorUpdater;
 
     public EntityToggleGlideListener(HiddenArmor plugin){
-        this.plugin = plugin;
-        this.hiddenArmorManager = plugin.getHiddenArmorManager();
         EventUtil.register(this, plugin);
+
+        this.plugin = plugin;
+        this.playerManager = plugin.getPlayerManager();
+        this.armorUpdater = plugin.getArmorUpdater();
     }
 
     @EventHandler
@@ -25,12 +28,12 @@ public class EntityToggleGlideListener implements Listener {
         if(!(e.getEntity() instanceof Player)) return;
 
         Player player = (Player) e.getEntity();
-        if(!hiddenArmorManager.isArmorHidden(player)) return;
+        if(playerManager.isArmorVisible(player)) return;
 
         new BukkitRunnable(){
             @Override
             public void run() {
-                ArmorPacketHandler.getInstance().updatePlayer(player);
+                armorUpdater.updatePlayer(player);
             }
         }.runTaskLater(plugin, 1L);
     }

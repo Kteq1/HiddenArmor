@@ -4,7 +4,8 @@ import me.kteq.hiddenarmor.HiddenArmor;
 import me.kteq.hiddenarmor.command.util.AbstractCommand;
 import me.kteq.hiddenarmor.command.util.CommandStatus;
 import me.kteq.hiddenarmor.handler.MessageHandler;
-import me.kteq.hiddenarmor.manager.HiddenArmorManager;
+import me.kteq.hiddenarmor.manager.PlayerManager;
+import me.kteq.hiddenarmor.util.ConfigHolder;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -15,23 +16,26 @@ import org.bukkit.entity.Player;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ToggleArmorCommand extends AbstractCommand {
+public class ToggleArmorCommand extends AbstractCommand implements ConfigHolder {
     HiddenArmor plugin;
+
+    //private boolean defaultPermissionToggle;
+    private boolean defaultPermissionToggleOther;
 
     public ToggleArmorCommand(HiddenArmor plugin, String command) {
         super(plugin, command);
+        plugin.addConfigHolder(this);
         this.plugin = plugin;
     }
 
     @Override
     public CommandStatus execute(CommandSender sender, Command command, String[] arguments) {
-        FileConfiguration config = plugin.getConfig();
-        HiddenArmorManager hiddenArmorManager = plugin.getHiddenArmorManager();
+        PlayerManager hiddenArmorManager = plugin.getPlayerManager();
 
         Player player;
-        MessageHandler messageHandler = MessageHandler.getInstance();
+        MessageHandler messageHandler = plugin.getMessageHandler();
         if(arguments.length == 1) {
-            if(!hasSubPermission(sender, "other") && !config.getBoolean("default-permissions.toggle-other")) return CommandStatus.SUCCESS;
+            if(!hasSubPermission(sender, "other") && !defaultPermissionToggleOther) return CommandStatus.SUCCESS;
             String playerName = arguments[0];
             player = Bukkit.getPlayer(playerName);
 
@@ -61,7 +65,7 @@ public class ToggleArmorCommand extends AbstractCommand {
     }
 
     public void sendUsage(CommandSender sender) {
-        MessageHandler messageHandler = MessageHandler.getInstance();
+        MessageHandler messageHandler = plugin.getMessageHandler();
         Map<String, String> placeholderMap = new HashMap<>();
         if(sender instanceof Player) {
             String usage = "/togglearmor" + (hasSubPermission(sender, "other") ? " [%player%]" : "");
@@ -70,5 +74,11 @@ public class ToggleArmorCommand extends AbstractCommand {
             placeholderMap.put("usage", "/togglearmor <%player%>");
         }
         messageHandler.message(sender, "%correct-usage%", false, placeholderMap);
+    }
+
+    @Override
+    public void loadConfig(FileConfiguration config) {
+        //this.defaultPermissionToggle = config.getBoolean("default-permissions.toggle");
+        this.defaultPermissionToggleOther = config.getBoolean("default-permissions.toggle-other");
     }
 }

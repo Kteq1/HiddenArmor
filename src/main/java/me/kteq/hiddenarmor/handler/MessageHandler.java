@@ -1,5 +1,7 @@
 package me.kteq.hiddenarmor.handler;
 
+import me.kteq.hiddenarmor.HiddenArmor;
+import me.kteq.hiddenarmor.util.ConfigHolder;
 import me.kteq.hiddenarmor.util.ConfigUtil;
 import me.kteq.hiddenarmor.util.StrUtil;
 import net.md_5.bungee.api.ChatMessageType;
@@ -19,31 +21,20 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-public class MessageHandler {
-    private static MessageHandler instance;
-
-    private Plugin plugin;
+public class MessageHandler implements ConfigHolder {
+    private final Plugin plugin;
     private String defaultLocale;
     private String prefix = "";
     private Map<String, FileConfiguration> localeMap;
-    
 
-    public static MessageHandler getInstance() {
-        if (instance == null) {
-            instance = new MessageHandler();
-        }
-        return instance;
-    }
-
-    public void setup(Plugin plugin, String prefix) {
+    public MessageHandler(HiddenArmor plugin, String prefix) {
         this.plugin = plugin;
+        plugin.addConfigHolder(this);
         setPrefix(prefix);
         reloadLocales();
     }
 
     public void reloadLocales() {
-        setDefaultLocale(plugin.getConfig().getString("locale.default-locale", "en_us").replaceAll("-", "_"));
-
         Set<String> includedLocales = new HashSet<>();
         includedLocales.add("en_us");
         includedLocales.add("pt_br");
@@ -54,8 +45,6 @@ public class MessageHandler {
                 plugin.saveResource(path, false);
             }
         }
-
-
 
         localeMap = new HashMap<>();
         File localeFolder = new File(plugin.getDataFolder().getAbsolutePath() + "/locale");
@@ -147,5 +136,10 @@ public class MessageHandler {
         InputStream inputStream = plugin.getResource("locale/en_us.yml");
         InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
         return YamlConfiguration.loadConfiguration(inputStreamReader);
+    }
+
+    @Override
+    public void loadConfig(FileConfiguration config) {
+        setDefaultLocale(config.getString("locale.default-locale", "en_us").replaceAll("-", "_"));
     }
 }

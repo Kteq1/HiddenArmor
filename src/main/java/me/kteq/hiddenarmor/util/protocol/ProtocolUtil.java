@@ -1,4 +1,4 @@
-package me.kteq.hiddenarmor.util;
+package me.kteq.hiddenarmor.util.protocol;
 
 import com.comphenix.protocol.ProtocolManager;
 import com.comphenix.protocol.events.PacketContainer;
@@ -10,29 +10,23 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 
-import java.lang.reflect.InvocationTargetException;
-
 public class ProtocolUtil {
 
-    public static void broadcastPlayerPacket(ProtocolManager manager, PacketContainer packet, Player player){
+    public static void broadcastPlayerPacket(ProtocolManager manager, PacketContainer packet, Player player) {
         for(Player p : Bukkit.getOnlinePlayers()){
             if(!(p.getWorld().equals(player.getWorld()) && p.getLocation().distance(player.getLocation()) < Bukkit.getViewDistance()*16 && !p.equals(player))) continue;
-            try {
-                manager.sendServerPacket(p, packet);
-            } catch (InvocationTargetException e) {
-                e.printStackTrace();
-            }
+            manager.sendServerPacket(p, packet);
         }
     }
 
-    public static boolean isArmorSlot(Pair<EnumWrappers.ItemSlot, ItemStack> pair){
+    public static boolean isArmorSlot(Pair<EnumWrappers.ItemSlot, ItemStack> pair) {
         return pair.getFirst().equals(EnumWrappers.ItemSlot.FEET) ||
                 pair.getFirst().equals(EnumWrappers.ItemSlot.LEGS) ||
                 pair.getFirst().equals(EnumWrappers.ItemSlot.CHEST) ||
                 pair.getFirst().equals(EnumWrappers.ItemSlot.HEAD);
     }
 
-    public enum ArmorType{
+    public enum ArmorType {
         HELMET(5), CHEST(6), LEGGS(7), BOOTS(8);
 
         private final int value;
@@ -53,8 +47,8 @@ public class ProtocolUtil {
         }
     }
 
-    public static ItemStack getArmor(ArmorType type, PlayerInventory inv){
-        switch (type){
+    public static ItemStack getArmor(ArmorType type, PlayerInventory inv) {
+        switch (type) {
             case HELMET: if(inv.getHelmet()!=null) return inv.getHelmet().clone();
                 break;
             case CHEST: if(inv.getChestplate()!=null) return inv.getChestplate().clone();
