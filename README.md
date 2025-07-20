@@ -1,6 +1,9 @@
 This plugin requires **[ProtocolLib](https://github.com/dmulloy2/ProtocolLib)** to work! (at least 5.3.0, for the latest version)
 
 # Hidden Armor
+### Download:
+[Modrinth](https://modrinth.com/plugin/hidden-armor) or [Spigot](https://www.spigotmc.org/resources/hidden-armor.100374).
+
 ### Features:
 - Toggle armor visibility by using the /togglearmor command
 - Armor can always be invisible when drinking an invisibility potion (Disabled by default, enable it in the config.yml)
