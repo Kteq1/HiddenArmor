@@ -1,6 +1,24 @@
-# HiddenArmor
-This plugin allows players to hide their armor so their skins are always visible to everyone.
+This plugin requires **[ProtocolLib](https://github.com/dmulloy2/ProtocolLib)** to work! (at least 5.3.0, for the latest version)
 
-Command: /togglearmor - Hides your own armor
+# Hidden Armor
+### Features:
+- Toggle armor visibility by using the /togglearmor command
+- Armor can always be invisible when drinking an invisibility potion (Disabled by default, enable it in the config.yml)
+- Some armor pieces can be ignored and not hidden by the plugin (Only leather armor is ignored by default, configurable)
 
-All configuration is explained in the config.yml file.
+
+### Commands and Permissions:
+- /togglearmor - Toggles the player's own armor visibility (hiddenarmor.toggle - Allowed to all players by default, you can change this in the config file)
+- /togglearmor <player> - Toggles other player's armor visibility (hiddenarmor.toggle.other)
+- /hiddenarmor reload - Reloads the configuration (hiddenarmor.reload)
+- /hiddenarmor help - Shows all available commands for the player
+- /hiddenarmor toggle/show/hide [player] - Toggle, hide or show own or other player's armor visibility (Uses same permissions as /togglearmor command)
+
+### Metrics:
+This plugin collects and sends anonymous data to bStats. This helps me to know how many servers and players are using it. You can disable this on the bStats config inside your plugins folder.
+
+### Dependencies:
+- [ProtocolLib](https://github.com/dmulloy2/ProtocolLib)
+
+### Additional Info:
+This is my first finished plugin, I initially made it for my private server with friends, and then decided to share it. 
