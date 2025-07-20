@@ -14,9 +14,10 @@ public class GameModeListener implements Listener {
     PlayerManager hiddenArmorManager;
 
     public GameModeListener(HiddenArmor plugin){
+        EventUtil.register(this, plugin);
+
         this.plugin = plugin;
         this.hiddenArmorManager = plugin.getPlayerManager();
-        EventUtil.register(this, plugin);
     }
 
     @EventHandler

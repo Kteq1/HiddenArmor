@@ -20,11 +20,11 @@ public class InventoryShiftClickListener implements Listener {
     private final ArmorUpdateHandler armorUpdater;
 
     public InventoryShiftClickListener(HiddenArmor plugin){
+        EventUtil.register(this, plugin);
+
         this.plugin = plugin;
         this.hiddenArmorManager = plugin.getPlayerManager();
         this.armorUpdater = plugin.getArmorUpdater();
-
-        EventUtil.register(this, plugin);
     }
 
     @EventHandler

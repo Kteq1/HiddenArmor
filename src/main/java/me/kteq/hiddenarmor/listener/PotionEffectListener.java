@@ -16,9 +16,11 @@ public class PotionEffectListener implements Listener {
     ArmorUpdateHandler armorUpdater;
 
     public PotionEffectListener(HiddenArmor plugin) {
+        EventUtil.register(this, plugin);
+
         this.plugin = plugin;
         this.hiddenArmorManager = plugin.getPlayerManager();
-        EventUtil.register(this, plugin);
+        this.armorUpdater = plugin.getArmorUpdater();
     }
 
     @EventHandler
