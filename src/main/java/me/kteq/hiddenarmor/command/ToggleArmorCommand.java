@@ -19,7 +19,7 @@ import java.util.Map;
 public class ToggleArmorCommand extends AbstractCommand implements ConfigHolder {
     HiddenArmor plugin;
 
-    //private boolean defaultPermissionToggle;
+    private boolean defaultPermissionToggle;
     private boolean defaultPermissionToggleOther;
 
     public ToggleArmorCommand(HiddenArmor plugin, String command) {
@@ -34,8 +34,9 @@ public class ToggleArmorCommand extends AbstractCommand implements ConfigHolder 
 
         Player player;
         MessageHandler messageHandler = plugin.getMessageHandler();
-        if(arguments.length == 1) {
-            if(!hasSubPermission(sender, "other") && !defaultPermissionToggleOther) return CommandStatus.SUCCESS;
+        if (!hasSubPermission(sender, "toggle") && !defaultPermissionToggle) return CommandStatus.NO_PERMISSION;
+        if (arguments.length == 1) {
+            if(!hasSubPermission(sender, "toggle.other") && !defaultPermissionToggleOther) return CommandStatus.NO_PERMISSION;
             String playerName = arguments[0];
             player = Bukkit.getPlayer(playerName);
 
@@ -43,7 +44,7 @@ public class ToggleArmorCommand extends AbstractCommand implements ConfigHolder 
                 messageHandler.message(sender, "%player-not-found%");
                 return CommandStatus.SUCCESS;
             }
-        }else {
+        } else {
             if (sender instanceof ConsoleCommandSender) {
                 messageHandler.message(sender, "%console-togglearmor-warning%");
                 sendUsage(sender);
@@ -78,7 +79,7 @@ public class ToggleArmorCommand extends AbstractCommand implements ConfigHolder 
 
     @Override
     public void loadConfig(FileConfiguration config) {
-        //this.defaultPermissionToggle = config.getBoolean("default-permissions.toggle");
+        this.defaultPermissionToggle = config.getBoolean("default-permissions.toggle");
         this.defaultPermissionToggleOther = config.getBoolean("default-permissions.toggle-other");
     }
 }

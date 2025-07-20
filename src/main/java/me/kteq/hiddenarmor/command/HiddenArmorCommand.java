@@ -47,7 +47,6 @@ public class HiddenArmorCommand extends AbstractCommand implements ConfigHolder 
                 plugin.reloadConfig();
                 messageHandler.reloadLocales();
                 messageHandler.message(sender, "%reload-success%", true);
-                messageHandler.message(sender, "%reload-default-permission-note%", true);
                 return CommandStatus.SUCCESS;
             case "toggle":
             case "hide":

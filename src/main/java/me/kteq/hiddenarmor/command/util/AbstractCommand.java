@@ -45,8 +45,12 @@ public abstract class AbstractCommand implements CommandExecutor {
             messageHandler.message(sender, "%command-error%");
             throw new RuntimeException(e);
         }
-        if (commandStatus.equals(CommandStatus.INVALID_USAGE)) {
-            messageHandler.message(sender, "%command-invalid%");
+        switch (commandStatus) {
+            case INVALID_USAGE:
+                messageHandler.message(sender, "%command-invalid%");
+                break;
+            case NO_PERMISSION:
+                messageHandler.message(sender, "%command-no-permission%");
         }
         return true;
     }
